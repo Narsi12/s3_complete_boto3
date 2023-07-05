@@ -1,7 +1,7 @@
 import uuid
 import datetime
-aws_access_key_id = "AKIARY57NE7BDRTSPZSJ"
-aws_secret_access_key = "yoEQD8b/F1tv8hQG8SkGTrCbeQSBpfl5lOeZlTZ8"
+aws_access_key_id = "<Your access key>"
+aws_secret_access_key = "<Your screat key>"
 region = "us-east-1"
 
 def create_bucket_name(bucket_prefix):
