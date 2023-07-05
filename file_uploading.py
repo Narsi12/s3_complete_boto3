@@ -18,5 +18,5 @@ def upload_file(bucket_name,file_path,key,file_type):
         print({"message": f"Failed to upload file to bucket. Error: {str(e)}"})
         return False
 
-upload_file('yellow202307011256',"C:/Users/narsimhac/Pictures/Camera Roll/WIN_20221121_16_51_02_Pro.jpg",'photo','jpg')
+upload_file('mouri202307031706',"D:/BOTO_TASKS/sample3.json",'simha','json')
 # upload_file('chirusimha',"C:/Users/narsimhac/Pictures/Screenshots/Screenshot (100).png",'screenshot','jpg')

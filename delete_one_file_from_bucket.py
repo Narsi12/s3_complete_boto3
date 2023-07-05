@@ -12,6 +12,6 @@ def delete_particular_file_from_s3_bucket(bucket_name,file_name):
     except Exception as e:
         print(f"Failed to delete file {file_name} from bucket {bucket_name}. Error: {str(e)}")
 
-bucket_name = 'yellow202307011256'
-file_name = 'screenshot1.jpg'
+bucket_name = 'yellow202307011400'
+file_name = 'code.txt'
 delete_particular_file_from_s3_bucket(bucket_name, file_name)

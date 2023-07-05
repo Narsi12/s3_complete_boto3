@@ -3,13 +3,13 @@ import boto3
 from config import aws_access_key_id,aws_secret_access_key,create_bucket_name
 
 def create_bucket(bucket_prefix):
-    s3_client = boto3.client('s3'
-                            )
-    #or
-    # s3_client = boto3.client('s3',
-    #                          aws_access_key_id=aws_access_key_id,
-    #                          aws_secret_access_key=aws_secret_access_key
+    # s3_client = boto3.client('s3'
     #                         )
+    #or
+    s3_client = boto3.client('s3',
+                             aws_access_key_id=aws_access_key_id,
+                             aws_secret_access_key=aws_secret_access_key
+                            )
     
     bucket_name = create_bucket_name(bucket_prefix)
     try:
@@ -18,5 +18,5 @@ def create_bucket(bucket_prefix):
     except Exception as e:
         print({"message": f"Failed to create bucket. Error: {str(e)}"})
 
-create_bucket("yellow")
+create_bucket("mouri")
 
