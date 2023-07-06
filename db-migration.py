@@ -7,10 +7,10 @@ import botocore
 from datetime import datetime
 
 mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
-mongo_db = mongo_client["jhon"]
+mongo_db = mongo_client["online_goods_delevery_db"]
 
 dynamodb = boto3.resource('dynamodb')
-table_name_prefix = 'mydb_data_'
+table_name_prefix = 'online'
 
 def convert_float_values_to_strings(data):
     if isinstance(data, float):
