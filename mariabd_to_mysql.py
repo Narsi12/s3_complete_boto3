@@ -20,19 +20,19 @@ tables = maria_cursor.fetchall()
 
 for table in tables:
     table_name = table[0]
-    
-    maria_cursor.execute(f"SELECT * FROM mariaDB.{table_name}")
-    data = maria_cursor.fetchall()
-
-    mysql_cursor = mysql_conn.cursor()
-    mysql_cursor.execute(f"CREATE TABLE {table_name} LIKE mariaDB.{table_name}")
+    try:
+        maria_cursor.execute(f"SELECT * FROM mariaDB.{table_name}")
+        data = maria_cursor.fetchall()
+        mysql_cursor = mysql_conn.cursor()
+        mysql_cursor.execute(f"CREATE TABLE  {table_name} LIKE mariaDB.{table_name}")
+    except Exception as e:
+        print(f"Table with {table_name} is already exists")
 
     for row in data:
-        insert_query = f"INSERT INTO {table_name} VALUES ({','.join(['%s'] * len(row))})"
+        insert_query = f"INSERT IGNORE INTO {table_name} VALUES ({','.join(['%s'] * len(row))})"
         mysql_cursor.execute(insert_query, row)
-        print("Data migration is completed")
 
     mysql_conn.commit()
-
 mysql_conn.close()
 maria_conn.close()
+ 
