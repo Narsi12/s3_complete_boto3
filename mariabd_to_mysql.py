@@ -27,12 +27,16 @@ for table in tables:
         mysql_cursor.execute(f"CREATE TABLE  {table_name} LIKE mariaDB.{table_name}")
     except Exception as e:
         print(f"Table with {table_name} is already exists")
-
-    for row in data:
-        insert_query = f"INSERT IGNORE INTO {table_name} VALUES ({','.join(['%s'] * len(row))})"
-        mysql_cursor.execute(insert_query, row)
+    try:
+        for row in data:
+            insert_query = f"INSERT IGNORE INTO {table_name} VALUES ({','.join(['%s'] * len(row))})"
+            mysql_cursor.execute(insert_query, row)
+    except Exception as e:
+         print(f"Error occurred while migrating table '{table_name}': {str(e)}")
 
     mysql_conn.commit()
+print("Data Migration is completed")
 mysql_conn.close()
 maria_conn.close()
+
  

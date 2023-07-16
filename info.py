@@ -1,6 +1,6 @@
  # existing_buckets = s3_client.list_buckets()['Buckets']  2
     # print(existing_buckets)
-
+server="172.16.10.45"
 
 import pymongo
 import boto3
@@ -97,3 +97,101 @@ for collection_name in collection_names:
     migrate_collection(collection_name)
 
 print("Entire MongoDB database migration to DynamoDB completed.")
+
+
+# import pyodbc
+
+# mssql_conn = pyodbc.connect(
+#     Trusted_Connection='Yes',
+#     driver='{SQL Server}',
+#     server="172.16.10.45",
+#     database="MT_TRAINING"
+# )
+
+# mssql_cursor = mssql_conn.cursor()
+
+# tables = mssql_cursor.tables(tableType='TABLE')
+# for table in tables:
+#     print(table.table_name)
+
+
+
+
+
+
+
+
+
+import pyodbc
+import mysql.connector
+
+# Connect to MariaDB
+maria_conn = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='root',
+    database='students'
+)
+
+# Connect to MSSQL
+mssql_conn = pyodbc.connect(
+    Trusted_Connection='Yes',
+    driver='{SQL Server}',
+    server="172.16.10.45",
+    database="MT_TRAINING"
+)
+
+maria_cursor = maria_conn.cursor()
+
+maria_cursor.execute("SHOW TABLES FROM students")
+tables = maria_cursor.fetchall()
+
+for table in tables:
+    table_name = table[0]
+    try:
+        maria_cursor.execute(f"SELECT * FROM students.{table_name}")
+        rows = maria_cursor.fetchall()
+        mssql_cursor = mssql_conn.cursor()
+
+        if not mssql_cursor.tables(table=table_name).fetchone():
+            maria_cursor.execute(f"SHOW COLUMNS FROM students.{table_name}")
+            columns = maria_cursor.fetchall()
+            column_names = [column[0] for column in columns]
+            column_types = [column[1].replace('bigint', 'BIGINT') for column in columns]
+
+            create_table_query = f"CREATE TABLE {table_name} ({','.join([f'{name} {type}' for name, type in zip(column_names, column_types)])})"
+            mssql_cursor.execute(create_table_query)
+        else:
+            print(f"Table '{table_name}' already exists in the MSSQL database. Skipping table creation.")
+
+        if mssql_cursor.tables(table=table_name).fetchone():
+            pass
+            for row in rows:
+                bytes_row = [bytes(column, "utf-8") for column in row]
+                insert_query = f"INSERT INTO {table_name} VALUES ({','.join(['?'] * len(row))})"
+                mssql_cursor.execute(insert_query, bytes_row)
+        else:
+            print(f"Table '{table_name}' does not exist in the MSSQL database. Skipping insertion.")
+
+        mssql_conn.commit()
+
+    except Exception as e:
+        print(f"Error occurred while migrating table '{table_name}': {str(e)}")
+
+mssql_cursor.close()
+maria_cursor.close()
+maria_conn.close()
+mssql_conn.close()
+
+print("Data Migration is completed")
+
+
+
+# for table in tables:
+#     table_name = table[0]
+#     maria_cursor.execute(f"SELECT * FROM {table_name}")
+#     table_data = maria_cursor.fetchall()
+#     print(f"Data in table '{table_name}':")
+#     for row in table_data:
+#         print(row)
+#     print()
