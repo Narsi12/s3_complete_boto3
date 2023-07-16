@@ -1,11 +1,11 @@
 import mysql.connector as narsimha
-
 mysql_conn = narsimha.connect(
     host='localhost',
     user='root',
     password='root',
     database='dsa_sheet'
 )
+# mysql_conn.autocommit = True
 my_cursor = mysql_conn.cursor()
 
 #CREATE DATABASE
@@ -35,4 +35,6 @@ my_cursor.execute("CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name V
 my_cursor.execute('DROP TABLE users')
 
 
-
+#UPDATE RECORDS
+my_cursor.execute("UPDATE leetcode SET name = 'chnarsimha goud' WHERE email = 'ch@gmail.com' ")
+mysql_conn.commit()
